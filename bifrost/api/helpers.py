@@ -2,6 +2,7 @@ import inspect
 from types import MethodType
 
 import graphene
+from django.utils.translation import ugettext_lazy
 from wagtail.core.models import Page
 
 from .registry import registry

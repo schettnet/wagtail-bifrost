@@ -14,7 +14,7 @@ Wagtail docs:
 ::
 
    ...
-   from bifrost.models import (
+   from bifrost.api.models import (
        GraphQLString,
        GraphQLStreamfield,
    )

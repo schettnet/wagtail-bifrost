@@ -12,7 +12,7 @@ and take advantage of Bifrost's generic ``GraphQLField`` type.
 
 GraphQLString
 -------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLString(field_name, required=False)
 
     A basic field type is string. Commonly used for CharField, TextField,
@@ -29,7 +29,7 @@ GraphQLString
     In your models.py:
     ::
 
-        from bifrost.types import GraphQLString
+        from bifrost.api.types import GraphQLString
 
         class BlogPage(Page):
             author = models.CharField(max_length=255)
@@ -51,7 +51,7 @@ GraphQLString
 
 GraphQLCollection
 -------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLCollection(nested_type, *args, required=False, item_required=False, **kwargs)
 
     A field type that wraps another model type in a list. Best suited for referencing Orderables (i.e. ForeignKey lists).
@@ -87,7 +87,7 @@ GraphQLCollection
     In your models.py:
     ::
 
-        from bifrost.types import GraphQLString
+        from bifrost.api.types import GraphQLString
 
         class BlogPage(Page):
             author = models.CharField(max_length=255)
@@ -124,7 +124,7 @@ GraphQLCollection
 
 GraphQLInt
 ----------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLInt(field_name, required=False)
 
     Used to serialize integer-based Django fields such as ``IntegerField``
@@ -133,7 +133,7 @@ GraphQLInt
 
 GraphQLFloat
 ------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLFloat(field_name, required=False)
 
     Like ``GraphQLInt``, this field is used to serialize ``Float`` and ``Decimal`` fields.
@@ -141,13 +141,13 @@ GraphQLFloat
 
 GraphQLBoolean
 --------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLBoolean(field_name, required=False)
 
 
 GraphQLStreamfield
 ------------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLStreamfield(field_name, required=False)
 
 This field type supports all built-in ``Streamfield`` blocks. It also supports
@@ -156,7 +156,7 @@ custom blocks built using ``StructBlock`` and the like.
 
 GraphQLSnippet
 --------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLSnippet(field_name, snippet_modal, required=False)
 
     ``GraphQLSnippet`` is a little bit more complicated; You first need to define
@@ -230,7 +230,7 @@ GraphQLSnippet
 
 GraphQLForeignKey
 -----------------
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLForeignKey(field_name, content_type, required=False)
 
     ``GraphQLForeignKey`` is similar to ``GraphQLSnippet`` in that you pass a
@@ -268,7 +268,7 @@ GraphQLForeignKey
 GraphQLImage
 ------------
 
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLImage(field_name, required=False)
 
     Use this field type to serialize the core Wagtail or your custom Image model.
@@ -277,7 +277,7 @@ GraphQLImage
 GraphQLDocument
 ---------------
 
-.. module:: bifrost.models
+.. module:: bifrost.api.models
 .. class:: GraphQLDocument(field_name, required=False)
 
     Us this field type to serialize the core Wagtail or your custom Document model.

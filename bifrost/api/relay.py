@@ -2,7 +2,7 @@
 import graphene
 
 # app
-from .settings import RELAY
+from ..settings import RELAY
 
 if RELAY:
 

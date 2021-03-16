@@ -22,10 +22,10 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import AbstractImage, AbstractRendition
 from wagtail.snippets.models import get_snippet_models
 
+from ..settings import url_prefix_for_site
 from .helpers import register_graphql_schema, streamfield_types
 from .permissions import with_page_permissions
 from .registry import registry
-from .settings import url_prefix_for_site
 from .types.documents import DocumentObjectType
 
 # app types

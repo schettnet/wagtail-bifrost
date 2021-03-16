@@ -1,7 +1,7 @@
 import graphene
 from django.apps import apps
 
-from ..registry import registry
+from .registry import registry
 
 
 # Classes used to define what the Django field should look like in the GQL type
@@ -108,7 +108,7 @@ def GraphQLForeignKey(field_name, content_type, is_list=False, **kwargs):
 
 def GraphQLStreamfield(field_name: str, is_list=True, **kwargs):
     def Mixin():
-        from ..types.streamfield import StreamFieldInterface
+        from .types.streamfield import StreamFieldInterface
 
         return GraphQLField(field_name, StreamFieldInterface, is_list=is_list, **kwargs)
 
@@ -117,7 +117,7 @@ def GraphQLStreamfield(field_name: str, is_list=True, **kwargs):
 
 def GraphQLImage(field_name: str, **kwargs):
     def Mixin():
-        from ..types.images import get_image_type
+        from .types.images import get_image_type
 
         return GraphQLField(field_name, get_image_type, **kwargs)
 
@@ -126,7 +126,7 @@ def GraphQLImage(field_name: str, **kwargs):
 
 def GraphQLDocument(field_name: str, **kwargs):
     def Mixin():
-        from ..types.documents import get_document_type
+        from .types.documents import get_document_type
 
         return GraphQLField(field_name, get_document_type, **kwargs)
 
@@ -135,7 +135,7 @@ def GraphQLDocument(field_name: str, **kwargs):
 
 def GraphQLMedia(field_name: str, **kwargs):
     def Mixin():
-        from ..types.media import MediaObjectType
+        from .types.media import MediaObjectType
 
         return GraphQLField(field_name, MediaObjectType, **kwargs)
 
@@ -144,7 +144,7 @@ def GraphQLMedia(field_name: str, **kwargs):
 
 def GraphQLPage(field_name: str, **kwargs):
     def Mixin():
-        from ..types.pages import PageInterface
+        from .types.pages import PageInterface
 
         return GraphQLField(field_name, PageInterface, **kwargs)
 
@@ -161,7 +161,7 @@ def GraphQLCollection(
     **kwargs
 ):
     def Mixin():
-        from ..types.structures import QuerySetList
+        from .types.structures import QuerySetList
 
         # Check if using nested field extracion:
         source = kwargs.get("source", None)
@@ -197,7 +197,7 @@ def GraphQLCollection(
 
 def GraphQLEmbed(field_name: str):
     def Mixin():
-        from ..types.streamfield import EmbedBlock
+        from .types.streamfield import EmbedBlock
 
         return GraphQLField(field_name, EmbedBlock)
 

@@ -13,8 +13,8 @@ from wagtail.snippets.models import register_snippet
 from wagtail_headless_preview.models import HeadlessPreviewMixin
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
-from bifrost.helpers import register_query_field
-from bifrost.models import (
+from bifrost.api.helpers import register_query_field
+from bifrost.api.models import (
     GraphQLCollection,
     GraphQLDocument,
     GraphQLForeignKey,

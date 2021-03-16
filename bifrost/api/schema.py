@@ -20,17 +20,16 @@ specified_rules[:] = [rule for rule in specified_rules if rule is not NoUnusedFr
 # We load all Queries, Mutations and Subscriptions into the registry if not excluded
 # by settings.
 
+import bifrost.api.types.documents
+import bifrost.api.types.images
+import bifrost.api.types.redirects
+import bifrost.api.types.search
+import bifrost.api.types.settings
+import bifrost.api.types.snippets
 import bifrost.dropper.schema
 import bifrost.files.schema
-import bifrost.types.documents
-import bifrost.types.images
-import bifrost.types.redirects
-import bifrost.types.search
-import bifrost.types.settings
-import bifrost.types.snippets
 
-from .registry import registry
-from .settings import (
+from ..settings import (
     BIFROST_API_DOCUMENTS,
     BIFROST_API_DROPPER,
     BIFROST_API_FILES,
@@ -41,15 +40,22 @@ from .settings import (
     BIFROST_API_SNIPPETS,
     BIFROST_AUTO_CAMELCASE,
 )
+from .registry import registry
 
 QUERIES = [
     {"cls": bifrost.files.schema.Query, "active": BIFROST_API_FILES},
-    {"cls": bifrost.types.documents.DocumentsQuery(), "active": BIFROST_API_DOCUMENTS},
-    {"cls": bifrost.types.images.ImagesQuery(), "active": BIFROST_API_IMAGES},
-    {"cls": bifrost.types.redirects.RedirectsQuery, "active": BIFROST_API_REDIRECTS},
-    {"cls": bifrost.types.search.SearchQuery(), "active": BIFROST_API_SEARCH},
-    {"cls": bifrost.types.settings.SettingsQuery(), "active": BIFROST_API_SETTINGS},
-    {"cls": bifrost.types.snippets.SnippetsQuery(), "active": BIFROST_API_SNIPPETS},
+    {
+        "cls": bifrost.api.types.documents.DocumentsQuery(),
+        "active": BIFROST_API_DOCUMENTS,
+    },
+    {"cls": bifrost.api.types.images.ImagesQuery(), "active": BIFROST_API_IMAGES},
+    {
+        "cls": bifrost.api.types.redirects.RedirectsQuery,
+        "active": BIFROST_API_REDIRECTS,
+    },
+    {"cls": bifrost.api.types.search.SearchQuery(), "active": BIFROST_API_SEARCH},
+    {"cls": bifrost.api.types.settings.SettingsQuery(), "active": BIFROST_API_SETTINGS},
+    {"cls": bifrost.api.types.snippets.SnippetsQuery(), "active": BIFROST_API_SNIPPETS},
 ]
 
 MUTATIONS = [{"cls": bifrost.dropper.schema.Mutation, "active": BIFROST_API_DROPPER}]

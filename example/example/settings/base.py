@@ -166,7 +166,7 @@ BASE_URL = "http://localhost:8000"
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Bifrost Config:
-GRAPHENE = {"SCHEMA": "bifrost.schema.schema"}
+GRAPHENE = {"SCHEMA": "bifrost.api.schema.schema"}
 
 BIFROST_APPS = {"images": "", "home": "", "auth": ""}
 BIFROST_ADD_SEARCH_HIT = True

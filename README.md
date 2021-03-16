@@ -25,17 +25,20 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-* [About the Project](#about-the-project)
-  * [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Usage](#usage)
-* [Contributing](#contributing)
-* [Compatibility](#compatibility)
-* [License](#license)
-* [Contact](#contact)
-* [Acknowledgements](#inspired-by)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
+    - [Features:](#features)
+  - [Built With](#built-with)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+  - [Local development](#local-development)
+- [Compatibility](#compatibility)
+- [License](#license)
+- [Contact](#contact)
+- [Inspired by](#inspired-by)
 
 
 
@@ -140,7 +143,7 @@ _Your graphql endpoint is available at http://localhost:8000/graphql/_
 Here is a GraphQL model configuration for the default page from the Wagtail docs:
 ```python
 ...
-from bifrost.models import (
+from bifrost.api.models import (
     GraphQLString,
     GraphQLStreamfield,
 )

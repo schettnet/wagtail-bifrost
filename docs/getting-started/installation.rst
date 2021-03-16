@@ -25,7 +25,7 @@ you want to give to GraphQL types (you can usually leave this blank):
 ::
 
    # Bifrost Config:
-   GRAPHENE = {"SCHEMA": "bifrost.schema.schema"}
+   GRAPHENE = {"SCHEMA": "bifrost.api.schema.schema"}
    BIFROST_APPS = {
        "home": ""
    }
