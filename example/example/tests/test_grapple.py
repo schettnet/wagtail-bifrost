@@ -6,7 +6,7 @@ from django.test import TestCase, override_settings
 from graphene.test import Client
 from wagtail.core.models import Page
 
-from bifrost.schema import create_schema
+from bifrost.api.schema import create_schema
 
 SCHEMA = locate(settings.GRAPHENE["SCHEMA"])
 

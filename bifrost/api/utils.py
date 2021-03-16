@@ -24,7 +24,7 @@ def resolve_queryset(
     """
     Add limit, offset and search capabilities to the query. This contains
     argument names used by
-    :class:`~bifrost.types.structures.QuerySetList`.
+    :class:`~bifrost.api.types.structures.QuerySetList`.
     :param qs: The query set to be modified.
     :param info: The Graphene info object.
     :param limit: Limit number of objects in the QuerySet.
@@ -111,7 +111,7 @@ def resolve_paginated_queryset(
     """
     Add page, per_page and search capabilities to the query. This contains
     argument names used by
-    :function:`~bifrost.types.structures.PaginatedQuerySet`.
+    :function:`~bifrost.api.types.structures.PaginatedQuerySet`.
     :param qs: The query set to be modified.
     :param info: The Graphene info object.
     :param page: Page of resulting objects to return from the QuerySet.

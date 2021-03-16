@@ -1,4 +1,4 @@
-from bifrost.registry import registry
+from bifrost.api.registry import registry
 import graphene
 from .models import CustomImage
 from django.contrib.auth import get_user_model

@@ -19,14 +19,14 @@ class DropperHeimdallGeneration(graphene.Mutation):
     @superuser_required
     def mutate(self, info, **kwargs):
         try:
-            import bifrost.schema
+            import bifrost.api.schema
 
             from .connection import authenticate
 
             bifrost_auth_token = authenticate()
             client = GraphqlClient(endpoint=BIFROST_DROPPER_ENDPOINT)
 
-            introspection_dict = bifrost.schema.schema.introspect()
+            introspection_dict = bifrost.api.schema.schema.introspect()
             introspection_data = json.dumps(introspection_dict)
 
             query = """
