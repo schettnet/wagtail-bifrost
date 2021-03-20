@@ -116,7 +116,9 @@ async def connect():
 
             if url:
                 private_file = BifrostFile()
-                await download_to_file_field(url, private_file.file, access_token=access_token)
+                await download_to_file_field(
+                    url, private_file.file, access_token=access_token
+                )
                 url = private_file.secure_url
 
             # Processed `f5f27e3b-e5a2-41d8-9447-b3d3d214d278`(SUCCESS) -> http://localhost:8000/...

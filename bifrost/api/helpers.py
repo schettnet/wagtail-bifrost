@@ -207,7 +207,7 @@ def register_paginated_query_field(
                     plural_field_type,
                     cls,
                     required=plural_required,
-                    **field_query_params
+                    **field_query_params,
                 ),
             )
 
