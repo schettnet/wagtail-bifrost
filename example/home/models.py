@@ -1,6 +1,5 @@
-import graphene
 from django.db import models
-from home.blocks import StreamFieldBlock
+from .blocks import StreamFieldBlock
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
@@ -13,7 +12,8 @@ from wagtail.snippets.models import register_snippet
 from wagtail_headless_preview.models import HeadlessPreviewMixin
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
-from bifrost.api.helpers import register_query_field
+from bifrost.publisher.actions import register_publisher
+from bifrost.publisher.options import PublisherOptions
 from bifrost.api.models import (
     GraphQLCollection,
     GraphQLDocument,
@@ -31,14 +31,35 @@ class HomePage(Page):
     pass
 
 
+@register_publisher(read_singular=True)
 class AuthorPage(Page):
     name = models.CharField(max_length=255)
 
     content_panels = Page.content_panels + [FieldPanel("name")]
 
-    graphql_fields = [GraphQLString("name")]
+    graphql_fields = [
+        GraphQLString(
+            "slug",
+            publisher_options=PublisherOptions(read=True, create=True),
+            required=True,
+        ),
+        GraphQLString(
+            "title",
+            publisher_options=PublisherOptions(read=True, create=True),
+            required=True,
+        ),
+        GraphQLString(
+            "date",
+            publisher_options=PublisherOptions(read=True, create=True),
+            required=True,
+        ),
+        GraphQLString(
+            "name", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+    ]
 
 
+@register_publisher(read_singular=True)
 class BlogPage(HeadlessPreviewMixin, Page):
     date = models.DateField("Post date")
     advert = models.ForeignKey(
@@ -91,27 +112,57 @@ class BlogPage(HeadlessPreviewMixin, Page):
         return self
 
     graphql_fields = [
-        GraphQLString("heading"),
+        GraphQLString(
+            "slug",
+            required=True,
+            publisher_options=PublisherOptions(create=True, read=True),
+        ),
+        GraphQLString(
+            "title",
+            required=True,
+            publisher_options=PublisherOptions(create=True, read=True, delete=True),
+        ),
+        GraphQLString(
+            "date",
+            required=True,
+            publisher_options=PublisherOptions(create=True, read=True),
+        ),
         GraphQLString("date", required=True),
         GraphQLStreamfield("body"),
         GraphQLCollection(
             GraphQLForeignKey,
             "related_links",
             "home.blogpagerelatedlink",
-            required=True,
-            item_required=True,
+            required=False,
+            item_required=False,
+            publisher_options=PublisherOptions(read=True, create=True, update=True),
         ),
         GraphQLCollection(GraphQLString, "related_urls", source="related_links.url"),
         GraphQLCollection(GraphQLString, "authors", source="authors.person.name"),
-        GraphQLSnippet("advert", "home.Advert"),
-        GraphQLImage("cover"),
-        GraphQLDocument("book_file"),
-        GraphQLMedia("featured_media"),
-        GraphQLForeignKey("copy", "home.BlogPage"),
-        GraphQLPage("author"),
+        GraphQLSnippet(
+            "advert",
+            "home.Advert",
+            publisher_options=PublisherOptions(read=True, create=True),
+        ),
+        GraphQLImage(
+            "cover", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+        GraphQLDocument(
+            "book_file", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+        GraphQLMedia(
+            "featured_media", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+        GraphQLForeignKey(
+            "copy", "home.BlogPage", publisher_options=PublisherOptions(read=True)
+        ),
+        GraphQLPage(
+            "author", publisher_options=PublisherOptions(read=True, create=True)
+        ),
     ]
 
 
+@register_publisher(read_singular=True)
 class BlogPageRelatedLink(Orderable):
     page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name="related_links")
     name = models.CharField(max_length=255)
@@ -119,10 +170,18 @@ class BlogPageRelatedLink(Orderable):
 
     panels = [FieldPanel("name"), FieldPanel("url")]
 
-    graphql_fields = [GraphQLString("name"), GraphQLString("url")]
+    graphql_fields = [
+        GraphQLPage("page", publisher_options=PublisherOptions(create=True, read=True)),
+        GraphQLString(
+            "name", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+        GraphQLString(
+            "url", publisher_options=PublisherOptions(read=True, create=True)
+        ),
+    ]
 
 
-@register_snippet
+@register_publisher(read_singular=True)
 class Person(models.Model):
     name = models.CharField(max_length=255)
     job = models.CharField(max_length=255)
@@ -132,9 +191,15 @@ class Person(models.Model):
 
     panels = [FieldPanel("name"), FieldPanel("job")]
 
-    graphql_fields = [GraphQLString("name"), GraphQLString("job")]
+    graphql_fields = [
+        GraphQLString(
+            "name", publisher_options=PublisherOptions(create=True, delete=True)
+        ),
+        GraphQLString("job"),
+    ]
 
 
+@register_publisher(read_singular=True, read_plural=True, update=True, create=True)
 class Author(Orderable):
     page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name="authors")
     role = models.CharField(max_length=255)
@@ -144,24 +209,42 @@ class Author(Orderable):
 
     panels = [FieldPanel("role"), SnippetChooserPanel("person")]
 
-    graphql_fields = [GraphQLString("role"), GraphQLForeignKey("person", Person)]
+    graphql_fields = [
+        GraphQLString(
+            "role",
+            publisher_options=PublisherOptions(
+                create=True, read=True, update=True, readfilter=True
+            ),
+        ),
+        GraphQLForeignKey(
+            "person",
+            Person,
+            publisher_options=PublisherOptions(create=True, read=True, update=True),
+        ),
+    ]
 
 
 @register_snippet
-@register_query_field("advert", "adverts", {"url": graphene.String()})
+@register_publisher(read_singular=True)
 class Advert(models.Model):
     url = models.URLField(null=True, blank=True)
     text = models.CharField(max_length=255)
 
     panels = [FieldPanel("url"), FieldPanel("text")]
 
-    graphql_fields = [GraphQLString("url"), GraphQLString("text")]
+    graphql_fields = [
+        GraphQLString(
+            "url", publisher_options=PublisherOptions(create=True, read=True)
+        ),
+        GraphQLString("text"),
+    ]
 
     def __str__(self):
         return self.text
 
 
 @register_setting
+@register_publisher(read_singular=True)
 class SocialMediaSettings(BaseSetting):
     facebook = models.URLField(help_text="Your Facebook page URL")
     instagram = models.CharField(
