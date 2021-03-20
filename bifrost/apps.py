@@ -16,9 +16,11 @@ class Bifrost(AppConfig):
         from .api.actions import import_app_schema, import_apps, load_type_fields
         from .api.types.streamfield import register_streamfield_blocks
         from .dropper import connect
+        from .publisher.actions import load_lazy_registrations
 
         import_apps()
         load_type_fields()
+        load_lazy_registrations()
         register_streamfield_blocks()
         import_app_schema()
 

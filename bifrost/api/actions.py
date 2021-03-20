@@ -315,14 +315,18 @@ def load_type_fields():
 
                         # Add field to GQL type with correct field-type
                         field, field_type = get_field_type(field)
-                        type_meta[field.field_name] = field_type
 
-                        # Remove field from excluded list
-                        if field.field_name in exclude_fields:
-                            exclude_fields.remove(field.field_name)
+                        if field.publisher_options.read:
+                            type_meta[field.field_name] = field_type
 
-                        # Add a custom resolver for each field
-                        methods["resolve_" + field.field_name] = model_resolver(field)
+                            # Remove field from excluded list
+                            if field.field_name in exclude_fields:
+                                exclude_fields.remove(field.field_name)
+
+                            # Add a custom resolver for each field
+                            methods["resolve_" + field.field_name] = model_resolver(
+                                field
+                            )
 
                 # Replace stud node with real thing
                 type_meta["Meta"].exclude_fields = exclude_fields
@@ -407,11 +411,12 @@ def build_streamfield_type(
             # Get correct types from field
             field, field_type = get_field_type(field)
 
-            # Add support for `graphql_fields`
-            methods["resolve_" + field.field_name] = streamfield_resolver
+            if field.publisher_options.read:
+                # Add support for `graphql_fields`
+                methods["resolve_" + field.field_name] = streamfield_resolver
 
-            # Add field to GQL type with correct field-type
-            type_meta[field.field_name] = field_type
+                # Add field to GQL type with correct field-type
+                type_meta[field.field_name] = field_type
 
     # Set excluded fields to stop errors cropping up from unsupported field types.
     graphql_node = type(type_name, (base_type,), type_meta)
