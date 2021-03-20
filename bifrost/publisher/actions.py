@@ -6,6 +6,7 @@ from bifrost.api.registry import registry
 
 from .mutations import CreateMutation, DeleteMutation, UpdateMutation
 from .queries import ReadPluralQuery, ReadQuery
+from .utils import camel_to_snake
 
 KETSCHUP = []
 
@@ -45,23 +46,25 @@ def register_publisher(
     create=False, read_singular=False, read_plural=False, update=False, delete=True
 ):
     def inner(model):
+        operation_name = camel_to_snake(model.__name__)
+
         if create:
             register_operation(
-                model, CreateMutation, f"create_{model.__name__}", "Mutation"
+                model, CreateMutation, f"create_{operation_name}", "Mutation"
             )
         if read_singular:
-            register_operation(model, ReadQuery, f"read_{model.__name__}", "Query")
+            register_operation(model, ReadQuery, f"read_{operation_name}", "Query")
         if read_plural:
             register_operation(
-                model, ReadPluralQuery, f"read_{model.__name__}s", "Query"
+                model, ReadPluralQuery, f"read_{operation_name}s", "Query"
             )
         if update:
             register_operation(
-                model, UpdateMutation, f"update_{model.__name__}", "Mutation"
+                model, UpdateMutation, f"update_{operation_name}", "Mutation"
             )
         if delete:
             register_operation(
-                model, DeleteMutation, f"delete_{model.__name__}", "Mutation"
+                model, DeleteMutation, f"delete_{operation_name}", "Mutation"
             )
 
         return model
