@@ -1,8 +1,7 @@
-from bifrost.api.registry import registry
 import graphene
-from .models import CustomImage
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+
+from bifrost.api.registry import registry
 
 
 class Test(graphene.Mutation):

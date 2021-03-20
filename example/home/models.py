@@ -1,5 +1,4 @@
 from django.db import models
-from .blocks import StreamFieldBlock
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
@@ -12,8 +11,6 @@ from wagtail.snippets.models import register_snippet
 from wagtail_headless_preview.models import HeadlessPreviewMixin
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
-from bifrost.publisher.actions import register_publisher
-from bifrost.publisher.options import PublisherOptions
 from bifrost.api.models import (
     GraphQLCollection,
     GraphQLDocument,
@@ -25,6 +22,10 @@ from bifrost.api.models import (
     GraphQLStreamfield,
     GraphQLString,
 )
+from bifrost.publisher.actions import register_publisher
+from bifrost.publisher.options import PublisherOptions
+
+from .blocks import StreamFieldBlock
 
 
 class HomePage(Page):
