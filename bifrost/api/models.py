@@ -1,6 +1,8 @@
 import graphene
 from django.apps import apps
 
+from bifrost.publisher.options import PublisherOptions
+
 from .registry import registry
 
 
@@ -9,9 +11,18 @@ class GraphQLField:
     field_name: str
     field_type: str
     field_source: str
+    publisher_options: PublisherOptions
+    is_relation: bool
+    required: bool
 
     def __init__(
-        self, field_name: str, field_type: type = None, required=None, **kwargs
+        self,
+        field_name: str,
+        field_type: type = None,
+        publisher_options=PublisherOptions(),
+        is_relation=False,
+        required=False,
+        **kwargs,
     ):
         """
         Initialise GraphQLField from Django field.
@@ -21,6 +32,12 @@ class GraphQLField:
         self.field_name = field_name
         self.field_type = field_type
         self.field_source = kwargs.get("source", field_name)
+        self.required = required
+
+        self.is_relation = is_relation
+
+        # Set publisher info
+        self.publisher_options = publisher_options
 
         # Add support for NonNull/required fields
         if required:
@@ -94,6 +111,7 @@ def GraphQLForeignKey(field_name, content_type, is_list=False, **kwargs):
     def Mixin():
         field_type = None
         if isinstance(content_type, str):
+
             app_label, model = content_type.lower().split(".")
             mdl = apps.get_model(app_label, model)
             if mdl:
@@ -101,7 +119,7 @@ def GraphQLForeignKey(field_name, content_type, is_list=False, **kwargs):
         else:
             field_type = lambda: registry.models.get(content_type)
 
-        return GraphQLField(field_name, field_type, **kwargs)
+        return GraphQLField(field_name, field_type, is_relation=True, **kwargs)
 
     return Mixin
 
@@ -119,7 +137,7 @@ def GraphQLImage(field_name: str, **kwargs):
     def Mixin():
         from .types.images import get_image_type
 
-        return GraphQLField(field_name, get_image_type, **kwargs)
+        return GraphQLField(field_name, get_image_type, is_relation=True, **kwargs)
 
     return Mixin
 
@@ -128,7 +146,7 @@ def GraphQLDocument(field_name: str, **kwargs):
     def Mixin():
         from .types.documents import get_document_type
 
-        return GraphQLField(field_name, get_document_type, **kwargs)
+        return GraphQLField(field_name, get_document_type, is_relation=True, **kwargs)
 
     return Mixin
 
@@ -137,7 +155,7 @@ def GraphQLMedia(field_name: str, **kwargs):
     def Mixin():
         from .types.media import MediaObjectType
 
-        return GraphQLField(field_name, MediaObjectType, **kwargs)
+        return GraphQLField(field_name, MediaObjectType, is_relation=True, **kwargs)
 
     return Mixin
 
@@ -146,7 +164,7 @@ def GraphQLPage(field_name: str, **kwargs):
     def Mixin():
         from .types.pages import PageInterface
 
-        return GraphQLField(field_name, PageInterface, **kwargs)
+        return GraphQLField(field_name, PageInterface, is_relation=True, **kwargs)
 
     return Mixin
 
@@ -158,7 +176,7 @@ def GraphQLCollection(
     is_queryset=False,
     required=False,
     item_required=False,
-    **kwargs
+    **kwargs,
 ):
     def Mixin():
         from .types.structures import QuerySetList
