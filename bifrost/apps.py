@@ -15,7 +15,7 @@ class Bifrost(AppConfig):
         """
         from .api.actions import import_app_schema, import_apps, load_type_fields
         from .api.types.streamfield import register_streamfield_blocks
-        from .dropper import connect
+        from .hive import connect
         from .publisher.actions import load_lazy_registrations
 
         import_apps()
@@ -24,7 +24,7 @@ class Bifrost(AppConfig):
         register_streamfield_blocks()
         import_app_schema()
 
-        # Init dropper websocket connection
+        # Init hive websocket connection
         if os.environ.get("RUN_MAIN", None) != "true" and (
             "manage.py" not in sys.argv or "runserver" in sys.argv
         ):

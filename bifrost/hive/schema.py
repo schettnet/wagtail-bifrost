@@ -6,11 +6,11 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import superuser_required
 from python_graphql_client import GraphqlClient
 
-from ..settings import BIFROST_DROPPER_ENDPOINT, BIFROST_DROPPER_HEIMDALL_LICENSE
+from ..settings import BIFROST_HIVE_ENDPOINT, BIFROST_HIVE_HEIMDALL_LICENSE
 from .types import GenerationTypes
 
 
-class DropperHeimdallGeneration(graphene.Mutation):
+class HiveHeimdallGeneration(graphene.Mutation):
     taskId = graphene.String()
 
     class Arguments:
@@ -24,7 +24,7 @@ class DropperHeimdallGeneration(graphene.Mutation):
             from .connection import authenticate
 
             bifrost_auth_token = authenticate()
-            client = GraphqlClient(endpoint=BIFROST_DROPPER_ENDPOINT)
+            client = GraphqlClient(endpoint=BIFROST_HIVE_ENDPOINT)
 
             introspection_dict = bifrost.api.schema.schema.introspect()
             introspection_data = json.dumps(introspection_dict)
@@ -41,7 +41,7 @@ class DropperHeimdallGeneration(graphene.Mutation):
                 query=query,
                 variables={
                     "introspectionData": introspection_data,
-                    "licenseKey": BIFROST_DROPPER_HEIMDALL_LICENSE,
+                    "licenseKey": BIFROST_HIVE_HEIMDALL_LICENSE,
                 },
                 headers={"Authorization": f"JWT {bifrost_auth_token}"},
             )
@@ -51,20 +51,20 @@ class DropperHeimdallGeneration(graphene.Mutation):
 
             taskId = heimdall_generation_data["data"]["heimdallGeneration"]["taskId"]
 
-            return DropperHeimdallGeneration(taskId=taskId)
+            return HiveHeimdallGeneration(taskId=taskId)
         except Exception as ex:
             raise GraphQLError(ex)
 
 
 class Mutation(graphene.ObjectType):
-    dropper_heimdall_generation = DropperHeimdallGeneration.Field()
+    hive_heimdall_generation = HiveHeimdallGeneration.Field()
 
 
-class OnNewDropperHeimdallGeneration(channels_graphql_ws.Subscription):
+class OnNewHiveHeimdallGeneration(channels_graphql_ws.Subscription):
     """Simple GraphQL subscription."""
 
     # Subscription payload.
-    state = GenerationTypes.DropperState(required=True)
+    state = GenerationTypes.HiveState(required=True)
     url = graphene.String()
 
     class Arguments:
@@ -91,12 +91,12 @@ class OnNewDropperHeimdallGeneration(channels_graphql_ws.Subscription):
         state = payload["state"]
         url = payload["url"]
 
-        return OnNewDropperHeimdallGeneration(
-            state=GenerationTypes.DropperState.get(state), url=url
+        return OnNewHiveHeimdallGeneration(
+            state=GenerationTypes.HiveState.get(state), url=url
         )
 
     @classmethod
-    async def new_dropper_heimdall_generation(cls, state, url):
+    async def new_hive_heimdall_generation(cls, state, url):
         """Auxiliary function to send subscription notifications.
         It is generally a good idea to encapsulate broadcast invocation
         inside auxiliary class methods inside the subscription class.
@@ -111,4 +111,4 @@ class OnNewDropperHeimdallGeneration(channels_graphql_ws.Subscription):
 class Subscription(graphene.ObjectType):
     """Root GraphQL subscription."""
 
-    on_new_dropper_heimdall_generation = OnNewDropperHeimdallGeneration.Field()
+    on_new_hive_heimdall_generation = OnNewHiveHeimdallGeneration.Field()

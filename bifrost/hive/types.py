@@ -2,7 +2,7 @@ import graphene
 
 
 class GenerationTypes:
-    class DropperState(graphene.Enum):
+    class HiveState(graphene.Enum):
         PENDING = "PENDING"
         STARTED = "STARTED"
         RETRY = "RETRY"

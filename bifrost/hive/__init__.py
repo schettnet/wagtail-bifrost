@@ -1,7 +1,7 @@
 import asyncio
 import threading
 
-from ..settings import BIFROST_API_DROPPER
+from ..settings import BIFROST_API_HIVE
 
 
 def between_callback():
@@ -20,4 +20,4 @@ def start_connection_thread():
     _thread.start()
 
 
-connect = lambda: start_connection_thread() if BIFROST_API_DROPPER else None
+connect = lambda: start_connection_thread() if BIFROST_API_HIVE else None

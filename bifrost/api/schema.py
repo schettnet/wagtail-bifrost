@@ -26,12 +26,12 @@ import bifrost.api.types.redirects
 import bifrost.api.types.search
 import bifrost.api.types.settings
 import bifrost.api.types.snippets
-import bifrost.dropper.schema
+import bifrost.hive.schema
 import bifrost.files.schema
 
 from ..settings import (
     BIFROST_API_DOCUMENTS,
-    BIFROST_API_DROPPER,
+    BIFROST_API_HIVE,
     BIFROST_API_FILES,
     BIFROST_API_IMAGES,
     BIFROST_API_REDIRECTS,
@@ -58,11 +58,9 @@ QUERIES = [
     {"cls": bifrost.api.types.snippets.SnippetsQuery(), "active": BIFROST_API_SNIPPETS},
 ]
 
-MUTATIONS = [{"cls": bifrost.dropper.schema.Mutation, "active": BIFROST_API_DROPPER}]
+MUTATIONS = [{"cls": bifrost.hive.schema.Mutation, "active": BIFROST_API_HIVE}]
 
-SUBSCRIPTIONS = [
-    {"cls": bifrost.dropper.schema.Subscription, "active": BIFROST_API_DROPPER}
-]
+SUBSCRIPTIONS = [{"cls": bifrost.hive.schema.Subscription, "active": BIFROST_API_HIVE}]
 
 
 registry.queries += [o["cls"] for o in QUERIES if o["active"]]

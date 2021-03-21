@@ -49,19 +49,17 @@ def url_prefix_for_site(info: ResolveInfo):
 # > Bifrost settings
 # General
 BIFROST_AUTO_CAMELCASE = getattr(settings, "BIFROST_AUTO_CAMELCASE", True)
-# Dropper connection
-BIFROST_DROPPER_ENDPOINT = getattr(
-    settings, "BIFROST_DROPPER_ENDPOINT", "https://dropper.snek.at/graphql"
+# Hive connection
+BIFROST_HIVE_ENDPOINT = getattr(
+    settings, "BIFROST_HIVE_ENDPOINT", "https://hive.schett.net/graphql"
 )
-BIFROST_DROPPER_SOCKET_ENDPOINT = getattr(
-    settings, "BIFROST_DROPPER_SOCKET_ENDPOINT", "wss://dropper.snek.at/graphql"
+BIFROST_HIVE_SOCKET_ENDPOINT = getattr(
+    settings, "BIFROST_HIVE_SOCKET_ENDPOINT", "wss://hive.schett.net/graphql"
 )
-BIFROST_DROPPER_HEIMDALL_LICENSE = getattr(
-    settings, "BIFROST_DROPPER_HEIMDALL_LICENSE", None
-)
+BIFROST_HIVE_HEIMDALL_LICENSE = getattr(settings, "BIFROST_HIVE_HEIMDALL_LICENSE", None)
 # Conditional schema registration
 BIFROST_API_FILES = getattr(settings, "BIFROST_API_FILES", False)
-BIFROST_API_DROPPER = getattr(settings, "BIFROST_API_DROPPER", False)
+BIFROST_API_HIVE = getattr(settings, "BIFROST_API_HIVE", False)
 BIFROST_API_DOCUMENTS = getattr(settings, "BIFROST_API_DOCUMENTS", False)
 BIFROST_API_IMAGES = getattr(settings, "BIFROST_API_IMAGES", False)
 BIFROST_API_REDIRECTS = getattr(settings, "BIFROST_API_REDIRECTS", False)

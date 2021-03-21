@@ -11,9 +11,9 @@ from python_graphql_client import GraphqlClient
 
 from ..models import BifrostFile
 from ..settings import (
-    BIFROST_DROPPER_ENDPOINT,
-    BIFROST_DROPPER_HEIMDALL_LICENSE,
-    BIFROST_DROPPER_SOCKET_ENDPOINT,
+    BIFROST_HIVE_ENDPOINT,
+    BIFROST_HIVE_HEIMDALL_LICENSE,
+    BIFROST_HIVE_SOCKET_ENDPOINT,
 )
 from .exceptions import SettingEntryNotFound
 
@@ -21,19 +21,19 @@ logger = logging.getLogger(__name__)
 
 RECONNECT_TIMEOUT = 5
 
-if not BIFROST_DROPPER_ENDPOINT:
+if not BIFROST_HIVE_ENDPOINT:
     raise SettingEntryNotFound(
-        f"BIFROST_DROPPER_ENDPOINT not set. Check your project settings"
+        f"BIFROST_HIVE_ENDPOINT not set. Check your project settings"
     )
 
-if not BIFROST_DROPPER_SOCKET_ENDPOINT:
+if not BIFROST_HIVE_SOCKET_ENDPOINT:
     raise SettingEntryNotFound(
-        f"BIFROST_DROPPER_ENDPOINT not set. Check your project settings"
+        f"BIFROST_HIVE_ENDPOINT not set. Check your project settings"
     )
 
-if not BIFROST_DROPPER_HEIMDALL_LICENSE:
+if not BIFROST_HIVE_HEIMDALL_LICENSE:
     raise SettingEntryNotFound(
-        f"BIFROST_DROPPER_HEIMDALL_LICENSE not set. Check your project settings"
+        f"BIFROST_HIVE_HEIMDALL_LICENSE not set. Check your project settings"
     )
 
 
@@ -61,7 +61,7 @@ def download_file(url):
 
 
 def authenticate():
-    client = GraphqlClient(endpoint=BIFROST_DROPPER_ENDPOINT)
+    client = GraphqlClient(endpoint=BIFROST_HIVE_ENDPOINT)
     query = """
 				mutation tokenAuth($username: String!, $password: String!) {
 						tokenAuth(username: $username, password: $password) {
@@ -81,13 +81,13 @@ def authenticate():
     try:
         return result["data"]["tokenAuth"]["token"]
     except KeyError as ex:
-        logger.error(f"Unable to authenticate to {BIFROST_DROPPER_ENDPOINT}: {str(ex)}")
+        logger.error(f"Unable to authenticate to {BIFROST_HIVE_ENDPOINT}: {str(ex)}")
         raise ex
 
 
 async def connect():
     try:
-        client = GraphqlClient(endpoint=BIFROST_DROPPER_SOCKET_ENDPOINT)
+        client = GraphqlClient(endpoint=BIFROST_HIVE_SOCKET_ENDPOINT)
 
         query = """
                 subscription onNewHeimdallGeneration($licenseKey: ID!) {
@@ -101,10 +101,10 @@ async def connect():
                 }
             """
 
-        variables = {"licenseKey": BIFROST_DROPPER_HEIMDALL_LICENSE}
+        variables = {"licenseKey": BIFROST_HIVE_HEIMDALL_LICENSE}
 
         async def subscription_handle(data):
-            from .schema import OnNewDropperHeimdallGeneration
+            from .schema import OnNewHiveHeimdallGeneration
 
             if "errors" in data:
                 logger.error(data["errors"])
@@ -123,9 +123,7 @@ async def connect():
 
             # Processed `f5f27e3b-e5a2-41d8-9447-b3d3d214d278`(SUCCESS) -> http://localhost:8000/...
             logger.info(f"Processed `{task_id}`({state})` -> {url}")
-            await OnNewDropperHeimdallGeneration.new_dropper_heimdall_generation(
-                state, url
-            )
+            await OnNewHiveHeimdallGeneration.new_hive_heimdall_generation(state, url)
 
         def subscription_callback(data):
             loop = asyncio.get_event_loop()
@@ -136,11 +134,9 @@ async def connect():
         )
 
     except Exception as ex:
-        logger.error(
-            f"Unable to connect to {BIFROST_DROPPER_SOCKET_ENDPOINT}: {str(ex)}"
-        )
+        logger.error(f"Unable to connect to {BIFROST_HIVE_SOCKET_ENDPOINT}: {str(ex)}")
         logger.info(
-            f"Reconnecting to {BIFROST_DROPPER_SOCKET_ENDPOINT} in {RECONNECT_TIMEOUT}s"
+            f"Reconnecting to {BIFROST_HIVE_SOCKET_ENDPOINT} in {RECONNECT_TIMEOUT}s"
         )
 
         await asyncio.sleep(RECONNECT_TIMEOUT)
