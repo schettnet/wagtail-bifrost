@@ -10,7 +10,7 @@ from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.snippets.models import register_snippet
 from wagtail_headless_preview.models import HeadlessPreviewMixin
 from wagtailmedia.edit_handlers import MediaChooserPanel
-
+from graphql_jwt.decorators import login_required
 from bifrost.api.models import (
     GraphQLCollection,
     GraphQLDocument,
