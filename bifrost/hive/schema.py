@@ -11,7 +11,8 @@ from .types import GenerationTypes
 
 
 class HiveHeimdallGeneration(graphene.Mutation):
-    taskId = graphene.String()
+    task_id = graphene.String()
+    remaining_uses = graphene.String()
 
     class Arguments:
         token = graphene.String(required=False)
@@ -33,6 +34,7 @@ class HiveHeimdallGeneration(graphene.Mutation):
                 mutation heimdallGeneration($introspectionData: JSONString!, $licenseKey: String!) {
                     heimdallGeneration(introspectionData: $introspectionData, licenseKey: $licenseKey) {
                         taskId
+                        remainingUses
                     }
                 }
             """
@@ -49,9 +51,14 @@ class HiveHeimdallGeneration(graphene.Mutation):
             if "errors" in heimdall_generation_data:
                 raise GraphQLError(heimdall_generation_data["errors"][0]["message"])
 
-            taskId = heimdall_generation_data["data"]["heimdallGeneration"]["taskId"]
+            task_id = heimdall_generation_data["data"]["heimdallGeneration"]["taskId"]
+            remaining_uses = heimdall_generation_data["data"]["heimdallGeneration"][
+                "remainingUses"
+            ]
 
-            return HiveHeimdallGeneration(taskId=taskId)
+            return HiveHeimdallGeneration(
+                task_id=task_id, remaining_uses=remaining_uses
+            )
         except Exception as ex:
             raise GraphQLError(ex)
 
