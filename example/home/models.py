@@ -200,7 +200,13 @@ class Person(models.Model):
     ]
 
 
-@register_publisher(read_singular=True, read_plural=True, update=True, create=True)
+@register_publisher(
+    read_singular=True,
+    read_plural=True,
+    update=True,
+    create=True,
+    read_singular_permission=login_required,
+)
 class Author(Orderable):
     page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name="authors")
     role = models.CharField(max_length=255)
@@ -211,6 +217,10 @@ class Author(Orderable):
     panels = [FieldPanel("role"), SnippetChooserPanel("person")]
 
     graphql_fields = [
+        GraphQLPage(
+            "page",
+            publisher_options=PublisherOptions(create=True, read=True),
+        ),
         GraphQLString(
             "role",
             publisher_options=PublisherOptions(
