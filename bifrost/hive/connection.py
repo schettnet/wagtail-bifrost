@@ -48,18 +48,6 @@ def download_to_file_field(url, field, access_token=None):
         field.save(basename(urlsplit(url).path), File(tf))
 
 
-def download_file(url):
-    r = requests.get(url, allow_redirects=True)
-
-    with open("bridge-drop.tgz", "wb") as file:
-        file.write(r.content)
-
-        private_file = BifrostFile.objects.get_or_create(file__name=file.name)
-
-        private_file.file.save(file.name, File(file))
-        return private_file
-
-
 def authenticate():
     client = GraphqlClient(endpoint=BIFROST_HIVE_ENDPOINT)
     query = """
@@ -115,10 +103,14 @@ async def connect():
             task_id = data["data"]["onNewHeimdallGeneration"]["taskId"]
 
             if url:
-                private_file = BifrostFile()
+                private_file, created = await sync_to_async(
+                    BifrostFile.objects.get_or_create, thread_sensitive=False
+                )(ubfn="bifrost-bridge-drop")
+
                 await download_to_file_field(
                     url, private_file.file, access_token=access_token
                 )
+
                 url = private_file.secure_url
 
             # Processed `f5f27e3b-e5a2-41d8-9447-b3d3d214d278`(SUCCESS) -> http://localhost:8000/...
