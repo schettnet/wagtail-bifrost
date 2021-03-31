@@ -1,7 +1,7 @@
 import graphene
 from graphql_jwt.decorators import superuser_required
 
-from ..models import BifrostFile
+from ..files.models import BifrostFile
 
 
 class Query(graphene.ObjectType):

@@ -5,7 +5,7 @@ from wagtail.contrib.modeladmin.options import (
     modeladmin_register,
 )
 
-from .models.files import BifrostFile
+from .files.models import BifrostFile
 
 
 class BifrostFileAdmin(ModelAdmin):

@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from graphene_file_upload.django import FileUploadGraphQLView
 from private_storage.views import PrivateStorageView
 
-from .models.files import BifrostFile
+from .files.models import BifrostFile
 
 SHOULD_EXPOSE_GRAPHIQL = settings.DEBUG or getattr(
     settings, "BIFROST_EXPOSE_GRAPHIQL", False

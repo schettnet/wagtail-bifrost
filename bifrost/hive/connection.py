@@ -9,7 +9,7 @@ from asgiref.sync import sync_to_async
 from django.core.files import File
 from python_graphql_client import GraphqlClient
 
-from ..models import BifrostFile
+from ..files.models import BifrostFile
 from ..settings import (
     BIFROST_HIVE_ENDPOINT,
     BIFROST_HIVE_HEIMDALL_LICENSE,
