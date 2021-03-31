@@ -26,13 +26,13 @@ import bifrost.api.types.redirects
 import bifrost.api.types.search
 import bifrost.api.types.settings
 import bifrost.api.types.snippets
-import bifrost.hive.schema
 import bifrost.files.schema
+import bifrost.hive.schema
 
 from ..settings import (
     BIFROST_API_DOCUMENTS,
-    BIFROST_API_HIVE,
     BIFROST_API_FILES,
+    BIFROST_API_HIVE,
     BIFROST_API_IMAGES,
     BIFROST_API_REDIRECTS,
     BIFROST_API_SEARCH,
