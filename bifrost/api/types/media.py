@@ -1,9 +1,8 @@
 from django.conf import settings
 from graphene_django import DjangoObjectType
-
-# graphql_jwt
-from graphql_jwt.decorators import login_required
 from wagtailmedia.models import Media
+
+from bifrost.decorators import login_required
 
 
 class MediaObjectType(DjangoObjectType):

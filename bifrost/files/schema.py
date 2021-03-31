@@ -1,5 +1,6 @@
 import graphene
-from graphql_jwt.decorators import superuser_required
+
+from bifrost.decorators import superuser_required
 
 from ..files.models import BifrostFile
 

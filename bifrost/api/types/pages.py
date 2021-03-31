@@ -3,12 +3,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from graphene_django.types import DjangoObjectType
 from graphql.execution.base import ResolveInfo
-
-# graphql_jwt
-from graphql_jwt.decorators import login_required
 from rx.subjects import Subject
 from wagtail.core.models import Page as WagtailPage
 from wagtail_headless_preview.signals import preview_update
+
+from bifrost.decorators import login_required
 
 from ..registry import registry
 from ..utils import resolve_queryset

@@ -10,9 +10,6 @@ from django.db import models
 from django.utils.text import camel_case_to_spaces
 from graphene.types.generic import GenericScalar
 from graphene_django.types import DjangoObjectType
-
-# graphql_jwt
-from graphql_jwt.decorators import login_required
 from wagtail.contrib.forms.models import AbstractForm
 from wagtail.contrib.settings.models import BaseSetting
 from wagtail.core.blocks import StructValue, stream_block
@@ -21,6 +18,8 @@ from wagtail.documents.models import AbstractDocument
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import AbstractImage, AbstractRendition
 from wagtail.snippets.models import get_snippet_models
+
+from bifrost.decorators import login_required
 
 from ..settings import url_prefix_for_site
 from .helpers import register_graphql_schema, streamfield_types

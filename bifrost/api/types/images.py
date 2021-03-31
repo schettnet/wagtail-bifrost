@@ -1,12 +1,11 @@
 import graphene
 from django.conf import settings
 from graphene_django import DjangoObjectType
-
-# graphql_jwt
-from graphql_jwt.decorators import login_required
 from wagtail.images import get_image_model
 from wagtail.images.models import Image as WagtailImage
 from wagtail.images.models import Rendition as WagtailImageRendition
+
+from bifrost.decorators import login_required
 
 from ..registry import registry
 from ..utils import resolve_queryset

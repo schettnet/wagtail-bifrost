@@ -1,4 +1,5 @@
 from django.db import models
+from bifrost.decorators import login_required
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
@@ -10,7 +11,6 @@ from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.snippets.models import register_snippet
 from wagtail_headless_preview.models import HeadlessPreviewMixin
 from wagtailmedia.edit_handlers import MediaChooserPanel
-from graphql_jwt.decorators import login_required
 from bifrost.api.models import (
     GraphQLCollection,
     GraphQLDocument,

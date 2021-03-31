@@ -1,11 +1,10 @@
 import graphene
 from django.apps import apps
-
-# graphql_jwt
-from graphql_jwt.decorators import login_required
 from wagtail.documents import get_document_model
 from wagtail.images import get_image_model
 from wagtail.search.backends import get_search_backend
+
+from bifrost.decorators import login_required
 
 from ..registry import registry
 

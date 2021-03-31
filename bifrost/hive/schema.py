@@ -3,8 +3,9 @@ import json
 import channels_graphql_ws
 import graphene
 from graphql import GraphQLError
-from graphql_jwt.decorators import superuser_required
 from python_graphql_client import GraphqlClient
+
+from bifrost.decorators import superuser_required
 
 from ..settings import BIFROST_HIVE_ENDPOINT, BIFROST_HIVE_HEIMDALL_LICENSE
 from .types import GenerationTypes

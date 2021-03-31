@@ -1,7 +1,6 @@
 import graphene
 
-# graphql_jwt
-from graphql_jwt.decorators import login_required
+from bifrost.decorators import login_required
 
 from ..registry import registry
 
