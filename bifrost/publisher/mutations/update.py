@@ -58,6 +58,8 @@ class UpdateMutation(BaseMutation):
 
     @classmethod
     def mutate(cls, root, info, id, input):
+        cls.before_resolve(root, info, input)
+
         Model: models.Model = cls._meta.model
         # OutputType = cls._meta.OutputType
         arguments: dict = input
@@ -76,6 +78,8 @@ class UpdateMutation(BaseMutation):
 
                     # Remove field name form arguments because they are already added above
                     arguments.pop(related_field.name)
+
+            cls.before_save(root, info, input, instance)
 
             instance.save()
 

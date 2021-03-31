@@ -54,15 +54,13 @@ class ReadPluralQuery(BaseQuery):
 
     @classmethod
     def resolve(cls, root, info, input):
+        cls.before_resolve(root, info, input)
+
         Model: models.Model = cls._meta.model
-        # OutputType = cls._meta.OutputType
         arguments: dict = input
 
-        # else:
-        #   """
-        #   The argument `id` is a required
-        #   """
-        #     pass
         qs = Model.objects.filter(**arguments)
+
+        cls.after_resolve(root, info, qs)
 
         return qs

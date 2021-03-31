@@ -17,7 +17,7 @@ class BaseMutation(graphene.Mutation, PublisherBase):
         abstract = True
 
     @classmethod
-    def before_mutate(cls, root, info, input):
+    def before_resolve(cls, root, info, input):
         return None
 
     @classmethod
@@ -25,5 +25,5 @@ class BaseMutation(graphene.Mutation, PublisherBase):
         return None
 
     @classmethod
-    def after_mutate(cls, root, info, obj, return_data):
+    def after_resolve(cls, root, info, return_data):
         return None

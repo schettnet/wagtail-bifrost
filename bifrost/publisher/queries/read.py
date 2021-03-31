@@ -46,18 +46,11 @@ class ReadQuery(BaseQuery):
 
     @classmethod
     def resolve(cls, root, info, id):
+        cls.before_resolve(root, info, id)
+
         Model: models.Model = cls._meta.model
-        # OutputType = cls._meta.OutputType
-
-        # if arguments.get("id"):
-        #     if len(arguments) > 1:
-        #         raise GraphQLError("Cannot use multiple arguments when `id` is used!")
-
-        # else:
-        #   """
-        #   The argument `id` is a required
-        #   """
-        #     pass
         instance = Model.objects.get(id=id)
+
+        cls.after_resolve(root, info, instance)
 
         return instance

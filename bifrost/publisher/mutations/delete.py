@@ -68,6 +68,8 @@ class DeleteMutation(BaseMutation):
 
     @classmethod
     def mutate(cls, root, info, input):
+        cls.before_resolve(root, info, input)
+
         Model: models.Model = cls._meta.model
         # OutputType = cls._meta.OutputType
         arguments: dict = input
@@ -85,5 +87,7 @@ class DeleteMutation(BaseMutation):
             qs = Model.objects.filter(**arguments)
             deletion_count = qs.count()
             qs.delete()
+
+            cls.after_resolve(root, info, deletion_count)
 
             return deletion_count
