@@ -409,26 +409,26 @@ class ListBlock(graphene.ObjectType):
 registry.streamfield_blocks.update(
     {
         "generic-block": StreamFieldBlock,
-        # blocks.CharBlock: CharBlock,
-        # blocks.TextBlock: TextBlock,
-        # blocks.EmailBlock: EmailBlock,
-        # blocks.IntegerBlock: IntegerBlock,
-        # blocks.FloatBlock: FloatBlock,
-        # blocks.DecimalBlock: DecimalBlock,
-        # blocks.RegexBlock: RegexBlock,
-        # blocks.URLBlock: URLBlock,
-        # blocks.BooleanBlock: BooleanBlock,
-        # blocks.DateBlock: DateBlock,
-        # blocks.TimeBlock: TimeBlock,
-        # blocks.DateTimeBlock: DateTimeBlock,
-        # blocks.RichTextBlock: RichTextBlock,
-        # blocks.RawHTMLBlock: RawHTMLBlock,
-        # blocks.BlockQuoteBlock: BlockQuoteBlock,
-        # blocks.ChoiceBlock: ChoiceBlock,
+        blocks.CharBlock: CharBlock,
+        blocks.TextBlock: TextBlock,
+        blocks.EmailBlock: EmailBlock,
+        blocks.IntegerBlock: IntegerBlock,
+        blocks.FloatBlock: FloatBlock,
+        blocks.DecimalBlock: DecimalBlock,
+        blocks.RegexBlock: RegexBlock,
+        blocks.URLBlock: URLBlock,
+        blocks.BooleanBlock: BooleanBlock,
+        blocks.DateBlock: DateBlock,
+        blocks.TimeBlock: TimeBlock,
+        blocks.DateTimeBlock: DateTimeBlock,
+        blocks.RichTextBlock: RichTextBlock,
+        blocks.RawHTMLBlock: RawHTMLBlock,
+        blocks.BlockQuoteBlock: BlockQuoteBlock,
+        blocks.ChoiceBlock: ChoiceBlock,
         blocks.StreamBlock: StreamBlock,
         blocks.StructBlock: StructBlock,
-        # blocks.StaticBlock: StaticBlock,
-        # blocks.ListBlock: ListBlock,
+        blocks.StaticBlock: StaticBlock,
+        blocks.ListBlock: ListBlock,
         wagtail.embeds.blocks.EmbedBlock: EmbedBlock,
     }
 )
@@ -477,9 +477,9 @@ def register_streamfield_blocks():
 
     registry.streamfield_blocks.update(
         {
-            # blocks.PageChooserBlock: PageChooserBlock,
-            # wagtail.documents.blocks.DocumentChooserBlock: DocumentChooserBlock,
-            # wagtail.images.blocks.ImageChooserBlock: ImageChooserBlock,
-            # wagtail.snippets.blocks.SnippetChooserBlock: SnippetChooserBlock,
+            blocks.PageChooserBlock: PageChooserBlock,
+            wagtail.documents.blocks.DocumentChooserBlock: DocumentChooserBlock,
+            wagtail.images.blocks.ImageChooserBlock: ImageChooserBlock,
+            wagtail.snippets.blocks.SnippetChooserBlock: SnippetChooserBlock,
         }
     )
