@@ -53,7 +53,6 @@ class PublisherBase:
                     if getattr(field_type, "_of_type", False):
                         field_type = field_type._of_type
                         if issubclass(field_type, StreamFieldInterface):
-                            print(field_type.__dict__)
                             field_type = graphene.JSONString()
                         else:
                             field_type = field_type()
