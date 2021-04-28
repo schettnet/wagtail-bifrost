@@ -2,7 +2,9 @@ from collections import OrderedDict
 
 import graphene
 from django.db import models, transaction
+from graphene.types.utils import yank_fields_from_attrs
 from graphene_django.utils import is_valid_django_model
+from wagtail.core.models import Page
 
 from ..options import PublisherOptions
 from ..utils import get_related_fields
@@ -47,6 +49,17 @@ class UpdateMutation(BaseMutation):
         selector = PublisherOptions.Selector.UPDATE
         InputType = super().load_input_type(type_name, model, selector)
 
+        # Add parent page field
+        setattr(InputType, "parent_page", graphene.ID())
+
+        fields = OrderedDict()
+        for base in reversed(InputType.__mro__):
+            fields.update(
+                yank_fields_from_attrs(base.__dict__, _as=graphene.InputField)
+            )
+
+        InputType._meta.fields.update(fields)
+
         # > Validate meta fields
         assert (
             len(InputType._meta.fields) > 0
@@ -79,9 +92,22 @@ class UpdateMutation(BaseMutation):
                     # Remove field name form arguments because they are already added above
                     arguments.pop(related_field.name)
 
+            # Save before handeling the parent page move to ensure correct path handling
             cls.before_save(root, info, input, instance)
-
             instance.save()
+
+            if issubclass(Model, Page):
+                parent_page_id = arguments.get("parent_page")
+
+                if parent_page_id:
+                    try:
+                        parent = Page.objects.get(id=parent_page_id)
+                        instance = instance.specific
+                        instance.move(parent, pos="last-child")
+                    except Page.DoesNotExist:
+                        raise GraphqlError("Parent page does not exists")
+
+                arguments.pop("parent_page")
 
             qs = Model.objects.filter(id=id)
             qs.update(**arguments)
