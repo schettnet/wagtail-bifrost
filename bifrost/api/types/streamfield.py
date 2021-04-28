@@ -477,7 +477,7 @@ def register_streamfield_blocks():
 
     registry.streamfield_blocks.update(
         {
-            blocks.PageChooserBlock: PageChooserBlock,
+            # blocks.PageChooserBlock: PageChooserBlock,
             wagtail.documents.blocks.DocumentChooserBlock: DocumentChooserBlock,
             wagtail.images.blocks.ImageChooserBlock: ImageChooserBlock,
             wagtail.snippets.blocks.SnippetChooserBlock: SnippetChooserBlock,
