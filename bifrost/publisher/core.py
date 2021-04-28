@@ -5,6 +5,7 @@ from graphene.types.scalars import Scalar
 from graphene.types.utils import yank_fields_from_attrs
 
 from bifrost.api.registry import registry
+from bifrost.api.types.streamfield import StreamFieldInterface
 
 
 class PublisherBase:
@@ -50,7 +51,12 @@ class PublisherBase:
                             field_type = field_type()
 
                     if getattr(field_type, "_of_type", False):
-                        field_type = field_type._of_type()
+                        field_type = field_type._of_type
+                        if issubclass(field_type, StreamFieldInterface):
+                            print(field_type.__dict__)
+                            field_type = graphene.JSONString()
+                        else:
+                            field_type = field_type()
 
                     if isinstance(field_type, Scalar):
                         if collection_field:

@@ -60,7 +60,7 @@ class AuthorPage(Page):
     ]
 
 
-@register_publisher(read_singular=True)
+@register_publisher(read_singular=True, create=True)
 class BlogPage(HeadlessPreviewMixin, Page):
     date = models.DateField("Post date")
     advert = models.ForeignKey(
@@ -129,7 +129,7 @@ class BlogPage(HeadlessPreviewMixin, Page):
             publisher_options=PublisherOptions(create=True, read=True),
         ),
         GraphQLString("date", required=True),
-        GraphQLStreamfield("body"),
+        GraphQLStreamfield("body",  publisher_options=PublisherOptions(create=True, read=True)),
         GraphQLCollection(
             GraphQLForeignKey,
             "related_links",
