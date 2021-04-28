@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from graphene.types.utils import yank_fields_from_attrs
 from graphene_django.utils import is_valid_django_model
+from graphql import GraphQLError
 from wagtail.core.models import Page
 
 from ..options import PublisherOptions
@@ -117,11 +118,15 @@ class CreateMutation(BaseMutation):
 
             if issubclass(Model, Page):
                 root = None
+                parent_page_id = arguments.get("parent_page")
 
-                try:
-                    root = Page.objects.get(id=arguments.get("parent_page"))
-                except Page.DoesNotExist:
+                if not parent_page_id:
                     root = Page.get_first_root_node()
+                else:
+                    try:
+                        root = Page.objects.get(id=parent_page_id)
+                    except Page.DoesNotExist:
+                        raise GraphQLError("Parent page does not exists")
 
                 instance.content_type = ContentType.objects.get_for_model(Model)
 
