@@ -50,7 +50,7 @@ class CreateMutation(BaseMutation):
 
         # > Add custom fields for some model types
         if issubclass(model, Page):
-            required_fields = ["slug", "title", "date"]
+            required_fields = ["slug", "title"]
 
             for field in required_fields:
                 assert getattr(
