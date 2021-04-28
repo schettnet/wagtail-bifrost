@@ -58,6 +58,7 @@ BIFROST_HIVE_SOCKET_ENDPOINT = getattr(
 )
 BIFROST_HIVE_HEIMDALL_LICENSE = getattr(settings, "BIFROST_HIVE_HEIMDALL_LICENSE", None)
 # Conditional schema registration
+BIFROST_API_AUTH = getattr(settings, "BIFROST_API_AUTH", True)
 BIFROST_API_FILES = getattr(settings, "BIFROST_API_FILES", False)
 BIFROST_API_HIVE = getattr(settings, "BIFROST_API_HIVE", False)
 BIFROST_API_DOCUMENTS = getattr(settings, "BIFROST_API_DOCUMENTS", False)

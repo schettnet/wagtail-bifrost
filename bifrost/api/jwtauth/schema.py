@@ -3,6 +3,8 @@ import graphql_jwt
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
 
+from bifrost.decorators import login_required
+
 # Create your registration related graphql schemes here.
 
 
@@ -20,3 +22,13 @@ class ObtainJSONWebToken(graphql_jwt.JSONWebTokenMutation):
         user = info.context.user
 
         return cls(user=user)
+
+
+class Query(graphene.ObjectType):
+    me = graphene.Field(UserType, token=graphene.String(required=False))
+
+    @login_required
+    def resolve_me(self, info, **kwargs):
+        user = info.context.user
+
+        return user

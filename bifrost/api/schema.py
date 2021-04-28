@@ -20,6 +20,7 @@ specified_rules[:] = [rule for rule in specified_rules if rule is not NoUnusedFr
 # We load all Queries, Mutations and Subscriptions into the registry if not excluded
 # by settings.
 
+import bifrost.api.jwtauth.schema
 import bifrost.api.types.documents
 import bifrost.api.types.images
 import bifrost.api.types.redirects
@@ -30,6 +31,7 @@ import bifrost.files.schema
 import bifrost.hive.schema
 
 from ..settings import (
+    BIFROST_API_AUTH,
     BIFROST_API_DOCUMENTS,
     BIFROST_API_FILES,
     BIFROST_API_HIVE,
@@ -43,6 +45,7 @@ from ..settings import (
 from .registry import registry
 
 QUERIES = [
+    {"cls": bifrost.api.jwtauth.schema.Query, "active": BIFROST_API_AUTH},
     {"cls": bifrost.files.schema.Query, "active": BIFROST_API_FILES},
     {
         "cls": bifrost.api.types.documents.DocumentsQuery(),
