@@ -27,11 +27,13 @@ import bifrost.api.types.redirects
 import bifrost.api.types.search
 import bifrost.api.types.settings
 import bifrost.api.types.snippets
+import bifrost.cms.schema
 import bifrost.files.schema
 import bifrost.hive.schema
 
 from ..settings import (
     BIFROST_API_AUTH,
+    BIFROST_API_CMS,
     BIFROST_API_DOCUMENTS,
     BIFROST_API_FILES,
     BIFROST_API_HIVE,
@@ -46,6 +48,7 @@ from .registry import registry
 
 QUERIES = [
     {"cls": bifrost.api.jwtauth.schema.Query, "active": BIFROST_API_AUTH},
+    {"cls": bifrost.cms.schema.Query, "active": BIFROST_API_CMS},
     {"cls": bifrost.files.schema.Query, "active": BIFROST_API_FILES},
     {
         "cls": bifrost.api.types.documents.DocumentsQuery(),
