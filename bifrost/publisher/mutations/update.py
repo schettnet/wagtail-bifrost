@@ -107,7 +107,7 @@ class UpdateMutation(BaseMutation):
                     except Page.DoesNotExist:
                         raise GraphqlError("Parent page does not exists")
 
-                arguments.pop("parent_page")
+                arguments.pop("parent_page", None)
 
             qs = Model.objects.filter(id=id)
             qs.update(**arguments)
