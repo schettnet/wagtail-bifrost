@@ -1,7 +1,6 @@
 from typing import OrderedDict
 
 import graphene
-from graphene.types.generic import GenericScalar
 from graphene.types.scalars import Scalar
 from graphene.types.utils import yank_fields_from_attrs
 
@@ -54,7 +53,7 @@ class PublisherBase:
                     if getattr(field_type, "_of_type", False):
                         field_type = field_type._of_type
                         if issubclass(field_type, StreamFieldInterface):
-                            field_type = GenericScalar()
+                            field_type = graphene.JSONString()
                         else:
                             field_type = field_type()
 
