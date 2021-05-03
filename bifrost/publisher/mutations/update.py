@@ -7,7 +7,6 @@ from graphene_django.utils import is_valid_django_model
 from wagtail.core.models import Page
 
 from ..options import PublisherOptions
-from ..utils import get_related_fields
 from .core import BaseMutation, BaseMutationOptions
 
 
@@ -76,21 +75,24 @@ class UpdateMutation(BaseMutation):
         Model: models.Model = cls._meta.model
         # OutputType = cls._meta.OutputType
         arguments: dict = input
-
         instance = None
 
         with transaction.atomic():
             instance = Model.objects.get(id=id)
 
-            for related_field in get_related_fields(Model):
+            for field in Model._meta.get_fields():
+                field_name = field.name
+                try:
+                    value = arguments[field_name]
 
-                if related_field.name in arguments:
-                    values = arguments[related_field.name]
+                    if field.is_relation:
+                        setattr(instance, f"{field_name}_id", value)
+                    else:
+                        setattr(instance, field_name, value)
 
-                    setattr(instance, f"{related_field.name}_id", values)
-
-                    # Remove field name form arguments because they are already added above
-                    arguments.pop(related_field.name)
+                    arguments.pop(field_name)
+                except:
+                    pass
 
             # Save before handeling the parent page move to ensure correct path handling
             cls.before_save(root, info, input, instance)
@@ -108,9 +110,6 @@ class UpdateMutation(BaseMutation):
                         raise GraphqlError("Parent page does not exists")
 
                 arguments.pop("parent_page", None)
-
-            qs = Model.objects.filter(id=id)
-            qs.update(**arguments)
 
             instance.refresh_from_db()
 

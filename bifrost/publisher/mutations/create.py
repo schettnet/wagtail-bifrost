@@ -9,7 +9,6 @@ from graphql import GraphQLError
 from wagtail.core.models import Page
 
 from ..options import PublisherOptions
-from ..utils import get_related_fields
 from .core import BaseMutation, BaseMutationOptions
 
 
@@ -93,25 +92,25 @@ class CreateMutation(BaseMutation):
 
             instance = Model()
 
-            for related_field in get_related_fields(Model):
+            for related_field in Model._meta.get_fields():
+                if related_field.is_relation:
+                    if related_field.name in arguments:
+                        values = arguments[related_field.name]
 
-                if related_field.name in arguments:
-                    values = arguments[related_field.name]
+                        if isinstance(values, list):
+                            related_set = getattr(instance, f"{related_field.name}")
+                            related_model = related_field.related_model
+                            for idx in values:
+                                try:
+                                    related_set.add(related_model.objects.get(id=idx))
+                                except related_model.DoesNotExist:
+                                    pass
 
-                    if isinstance(values, list):
-                        related_set = getattr(instance, f"{related_field.name}")
-                        related_model = related_field.related_model
-                        for idx in values:
-                            try:
-                                related_set.add(related_model.objects.get(id=idx))
-                            except related_model.DoesNotExist:
-                                pass
+                        else:
+                            setattr(instance, f"{related_field.name}_id", values)
 
-                    else:
-                        setattr(instance, f"{related_field.name}_id", values)
-
-                    # Remove field name form arguments because they are already added above
-                    arguments.pop(related_field.name)
+                        # Remove field name form arguments because they are already added above
+                        arguments.pop(related_field.name)
 
             for field_name, field_value in arguments.items():
                 setattr(instance, field_name, field_value)
