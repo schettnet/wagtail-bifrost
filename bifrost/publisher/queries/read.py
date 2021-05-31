@@ -3,7 +3,8 @@ from collections import OrderedDict
 import graphene
 from django.db import models
 from graphene_django.utils import is_valid_django_model
-
+from wagtail.core.models import Page
+from graphql import GraphQLError
 from .core import BaseQuery, BaseQueryOptions
 
 
@@ -32,7 +33,10 @@ class ReadQuery(BaseQuery):
         _meta.model = model
         _meta.OutputType = OutputType
 
-        arguments = OrderedDict(id=InputType(required=True))
+        if issubclass(model, Page):
+            arguments = OrderedDict(id=InputType(), slug=graphene.String())
+        else:
+            arguments = OrderedDict(id=InputType(required=True))
 
         setattr(cls, "Output", OutputType)
 
@@ -45,17 +49,26 @@ class ReadQuery(BaseQuery):
         return InputType
 
     @classmethod
-    def resolve(cls, root, info, id):
+    def resolve(cls, root, info, **kwargs):
+        id = kwargs.get("id")
+        # Slug for Wagtail Pages
+        slug = kwargs.get("slug")
+
         cls.before_resolve(root, info, id)
 
         Model: models.Model = cls._meta.model
 
         if hasattr(Model, "before_read"):
-            qs = Model.before_read(root, info, input)
+            qs = Model.before_read(root, info, kwargs)
         else:
             qs = Model.objects
 
-        instance = qs.get(id=id)
+        if id:
+            instance = qs.get(id=id)
+        elif slug:
+            instance = qs.get(slug=slug)
+        else:
+            raise GraphQLError("Id or slug must be provided")
 
         cls.after_resolve(root, info, instance)
 
