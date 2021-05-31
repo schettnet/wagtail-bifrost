@@ -70,13 +70,13 @@ class UpdateMutation(BaseMutation):
 
     @classmethod
     def mutate(cls, root, info, id, input):
-        cls.before_resolve(root, info, input)
-
         Model: models.Model = cls._meta.model
         # OutputType = cls._meta.OutputType
         arguments: dict = input
         instance = None
 
+        input["id"] = id
+        cls.before_resolve(root, info, input)
         with transaction.atomic():
             instance = Model.objects.get(id=id)
 

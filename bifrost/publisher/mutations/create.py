@@ -86,11 +86,14 @@ class CreateMutation(BaseMutation):
 
         Model: models.Model = cls._meta.model
         cls._meta.OutputType
-        arguments: dict = input
 
         with transaction.atomic():
-
             instance = Model()
+
+            if not hasattr(instance, "before_create"):
+                arguments = input
+            else:
+                instance, arguments = instance.before_create(root, info, input)
 
             for related_field in Model._meta.get_fields():
                 if related_field.is_relation:

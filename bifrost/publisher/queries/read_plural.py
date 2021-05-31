@@ -59,7 +59,10 @@ class ReadPluralQuery(BaseQuery):
         Model: models.Model = cls._meta.model
         arguments: dict = input
 
-        qs = Model.objects.filter(**arguments)
+        if hasattr(Model, "before_read"):
+            qs = Model.before_read(root, info, input)
+        else:
+            qs = Model.objects.filter(**arguments)
 
         cls.after_resolve(root, info, qs)
 

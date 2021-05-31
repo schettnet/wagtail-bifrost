@@ -49,7 +49,13 @@ class ReadQuery(BaseQuery):
         cls.before_resolve(root, info, id)
 
         Model: models.Model = cls._meta.model
-        instance = Model.objects.get(id=id)
+
+        if hasattr(Model, "before_read"):
+            qs = Model.before_read(root, info, input)
+        else:
+            qs = Model.objects
+
+        instance = qs.get(id=id)
 
         cls.after_resolve(root, info, instance)
 
