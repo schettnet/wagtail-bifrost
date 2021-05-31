@@ -3,8 +3,9 @@ from collections import OrderedDict
 import graphene
 from django.db import models
 from graphene_django.utils import is_valid_django_model
-from wagtail.core.models import Page
 from graphql import GraphQLError
+from wagtail.core.models import Page
+
 from .core import BaseQuery, BaseQueryOptions
 
 
