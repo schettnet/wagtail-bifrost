@@ -4,6 +4,7 @@ import graphene
 from django.db import models, transaction
 from graphene.types.utils import yank_fields_from_attrs
 from graphene_django.utils import is_valid_django_model
+from graphql import GraphQLError
 from wagtail.core.models import Page
 
 from ..options import PublisherOptions
@@ -35,9 +36,14 @@ class UpdateMutation(BaseMutation):
         _meta.model = model
         _meta.OutputType = OutputType
 
-        arguments = OrderedDict(
-            input=InputType(required=True), id=graphene.ID(required=True)
-        )
+        if issubclass(model, Page):
+            arguments = OrderedDict(
+                input=InputType(required=True), id=graphene.ID(), slug=graphene.String()
+            )
+        else:
+            arguments = OrderedDict(
+                input=InputType(required=True), id=graphene.ID(required=True)
+            )
 
         setattr(cls, "Output", OutputType)
 
@@ -69,16 +75,24 @@ class UpdateMutation(BaseMutation):
         return InputType
 
     @classmethod
-    def mutate(cls, root, info, id, input):
+    def mutate(cls, root, info, input, **kwargs):
         Model: models.Model = cls._meta.model
         # OutputType = cls._meta.OutputType
         arguments: dict = input
         instance = None
 
-        input["id"] = id
+        id = kwargs.get("id")
+        slug = kwargs.get("slug")
+
         cls.before_resolve(root, info, input)
+
         with transaction.atomic():
-            instance = Model.objects.get(id=id)
+            if id:
+                instance = Model.objects.get(id=id)
+            elif slug:
+                instance = Model.objects.get(slug=slug)
+            else:
+                raise GraphQLError("Id or slug must be provided")
 
             for field in Model._meta.get_fields():
                 field_name = field.name
@@ -96,6 +110,7 @@ class UpdateMutation(BaseMutation):
 
             # Save before handeling the parent page move to ensure correct path handling
             cls.before_save(root, info, input, instance)
+
             instance.save()
 
             if issubclass(Model, Page):
@@ -107,7 +122,7 @@ class UpdateMutation(BaseMutation):
                         instance = instance.specific
                         instance.move(parent, pos="last-child")
                     except Page.DoesNotExist:
-                        raise GraphqlError("Parent page does not exists")
+                        raise GraphQLError("Parent page does not exists")
 
                 arguments.pop("parent_page", None)
 
