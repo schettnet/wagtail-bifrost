@@ -500,7 +500,7 @@ def register_form_model(cls: Type[AbstractForm], type_prefix: str):
         form = instance.get_form(values, None, page=instance, user=user)
         if form.is_valid():
             # form_submission
-            instance.process_form_submission(form)
+            instance.process_form_submission(form, user)
             return registry.forms[_node](result="OK")
         else:
             return registry.forms[_node](
