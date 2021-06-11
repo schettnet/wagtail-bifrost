@@ -482,13 +482,13 @@ def register_form_model(cls: Type[AbstractForm], type_prefix: str):
         {
             "values": GenericScalar(),
             "url": graphene.String(required=True),
-            "token": graphene.String(required=True),
+            "token": graphene.String(required=False),
         },
     )
     _node = node
 
     @login_required
-    def mutate(_self, info, token, url, values):
+    def mutate(_self, info, url, values, token=None):
         url_prefix = url_prefix_for_site(info)
         query = WagtailPage.objects.filter(url_path=url_prefix + url.rstrip("/") + "/")
         instance = with_page_permissions(info.context, query.specific()).live().first()
